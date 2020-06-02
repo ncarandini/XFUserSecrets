@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
+using TPCWare.XFUserSecrets.Utils;
 using Xamarin.Forms;
 
 namespace TPCWare.XFUserSecrets
@@ -16,6 +12,33 @@ namespace TPCWare.XFUserSecrets
         public MainPage()
         {
             InitializeComponent();
+
+            var mySecret = UserSecretsManager.Settings["MySecret"];
+
+            // The Answer to the Ultimate Question of Life, the Universe, and Everything
+            UserSecretsLabel.Text = $"My secret is {mySecret}";
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
