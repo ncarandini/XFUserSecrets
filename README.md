@@ -23,15 +23,15 @@ Elas, Visual studio for Mac don't have any command to manage user secrets, but w
 
 More info on user secrets can be found in the [Microsoft documentation](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-3.1).
 
-## Where the "UserSecrets" file is stored
+## The "secrets.json" file
 
-The good thing of using user secrets is that a secrets.json file is created and store outside of the solution folder in a place not managed by the git versioning system.
-On Windows platform the path is `%APPDATA%\Microsoft\UserSecrets\<user_secrets_id>\secrets.json`.
-On Unix and Mac OSX platform the path is `~/.microsoft/usersecrets/<user_secrets_id>/secrets.json`.
+The good thing of using user secrets is that a `secrets.json file` is created and stored outside of the solution folder in a place not managed by the git versioning system.
+- On Windows platform the path is `%APPDATA%\Microsoft\UserSecrets\<user_secrets_id>\secrets.json`
+- On Unix and Mac OSX platform the path is `~/.microsoft/usersecrets/<user_secrets_id>/secrets.json`
 
-The UserSecretsId is a Guid (Globally Unique Identifier) assigned during initialization (by Visual Studio and .NET Core command), stored on the .csproj file:
+The `UserSecretsId` is a Guid (Globally Unique Identifier) assigned during initialization (by Visual Studio and .NET Core command), stored on the .csproj file:
 
-
+![image](https://user-images.githubusercontent.com/139274/83566339-236b6a00-a520-11ea-855a-d0648e953b80.png)
 
 ## MSBuild "EmbedUserSecrets" target
 
