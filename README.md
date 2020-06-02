@@ -9,6 +9,9 @@ This is obtained adding a MSBuild target that copy the UserSecrets file to the p
 Because the UserSecrets json data is embedded into the app, we can read it easily.
 Moreover, because the UserSecrets file is outside of the git root folder, is never committed nor pushed to the GitHub repository.
 
+## Create a "UserSecrets" file
+Visual Studio has an easy way to create UserSecrets: just 
+
 ## MSBuild "EmbedUserSecrets" target
 
 TODO
