@@ -21,13 +21,17 @@ Elas, Visual studio for Mac don't have any command to manage user secrets, but w
 
 ![image](https://user-images.githubusercontent.com/139274/83564726-7db6fb80-a51d-11ea-8c86-15da347bd0b3.png)
 
+Using the .NET CLI, we can also easily add a secret with `dotnet user-secrets set "MySecret" "HGttG:42"` :
+
+![image](https://user-images.githubusercontent.com/139274/83570046-b0fd8880-a525-11ea-8c98-faae91840fdc.png)
+
 More info on user secrets can be found in the [Microsoft documentation](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-3.1).
 
 ## The "secrets.json" file
 
 The good thing of using user secrets is that a `secrets.json file` is created and stored outside of the solution folder in a place not managed by the git versioning system.
 - On Windows platform the path is `%APPDATA%\Microsoft\UserSecrets\<user_secrets_id>\secrets.json`
-- On Unix and Mac OSX platform the path is `~/.microsoft/usersecrets/<user_secrets_id>/secrets.json`
+- On Unix and Mac OSX platforms the path is `~/.microsoft/usersecrets/<user_secrets_id>/secrets.json`
 
 The `UserSecretsId` is a Guid (Globally Unique Identifier) assigned during initialization (by Visual Studio and .NET Core command), stored on the .csproj file:
 
