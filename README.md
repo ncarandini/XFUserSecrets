@@ -39,7 +39,7 @@ The `UserSecretsId` is a Guid (Globally Unique Identifier) assigned during the u
 
 ## MSBuild "EmbedUserSecrets" target
 
-To embed the `secret.json` file as an `EmbeddedResource` we need to do some steps before and after the build process.
+To add the `secret.json` file as an `EmbeddedResource` to the Xamarin Forms common project we need to do some steps before and after the build process.
 
 Before the Build process:
 1) Check that we are building a `debug` version;
@@ -77,7 +77,9 @@ Here is the `UserSecrets.targets` file that I've made to implement those steps:
 </Project>
 ```
 
-Then we need to import the `UserSecrets.targets` into the project `.csproj` file, just before the closing `</Project>` tag:
+It's worth noting that this should work on both Windows and Unix/Mac OSX platforms and that it use the `UserSecretsId` property set on the .csproj file, so it can be copied and used in any solution without any need to change it.
+
+The only thing we need to do is to import the `UserSecrets.targets` into the project `.csproj` file, adding `<Import Project="UserSecrets.targets" />` just before the closing `</Project>` tag:
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
