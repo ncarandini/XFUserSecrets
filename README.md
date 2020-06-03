@@ -33,7 +33,7 @@ The good thing of using user secrets is that a `secrets.json file` is created an
 - On Windows platform the path is `%APPDATA%\Microsoft\UserSecrets\<user_secrets_id>\secrets.json`
 - On Unix and Mac OSX platforms the path is `~/.microsoft/usersecrets/<user_secrets_id>/secrets.json`
 
-The `UserSecretsId` is a Guid (Globally Unique Identifier) assigned during initialization (by Visual Studio and .NET Core command), stored on the .csproj file:
+The `UserSecretsId` is a Guid (Globally Unique Identifier) assigned during the user secrets initialization and stored on the .csproj file:
 
 ![image](https://user-images.githubusercontent.com/139274/83566339-236b6a00-a520-11ea-855a-d0648e953b80.png)
 
