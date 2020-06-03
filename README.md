@@ -21,7 +21,7 @@ Elas, Visual studio for Mac don't have any command to manage user secrets, but w
 
 ![image](https://user-images.githubusercontent.com/139274/83564726-7db6fb80-a51d-11ea-8c86-15da347bd0b3.png)
 
-Using the .NET CLI, we can also easily add a secret with `dotnet user-secrets set "MySecret" "HGttG:42"` :
+Using the .NET CLI, we can also add one or more secrets, like with `dotnet user-secrets set "MySecret" "HGttG:42"` :
 
 ![image](https://user-images.githubusercontent.com/139274/83570046-b0fd8880-a525-11ea-8c98-faae91840fdc.png)
 
