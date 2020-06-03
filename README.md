@@ -39,12 +39,84 @@ The `UserSecretsId` is a Guid (Globally Unique Identifier) assigned during initi
 
 ## MSBuild "EmbedUserSecrets" target
 
-TODO
+To embed the `secret.json` file as an `EmbeddedResource` we need to do some steps before and after the build process.
+
+Before the Build process:
+1) Check that we are building a `debug` version;
+2) Verify that the project is using UserSecrets;
+3) Copy the `secret.json` file to the project folder;
+4) Add the file to the `EmbeddedResource` file list.
+
+After the Build process:
+1) Delete the `secret.json` file.
+
+Here is the `UserSecrets.targets` file that I've made to implement those steps:
+
+```
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="EmbedUserSecrets" BeforeTargets="PrepareForBuild" Condition=" '$(Configuration)' == 'Debug' And '$(UserSecretsId)' != '' ">
+    <PropertyGroup>
+      <UserSecretsFilePath Condition=" '$(OS)' == 'Windows_NT' ">
+        $([System.Environment]::GetFolderPath(SpecialFolder.UserProfile))\AppData\Roaming\Microsoft\UserSecrets\$(UserSecretsId)\secrets.json
+      </UserSecretsFilePath>   
+      <UserSecretsFilePath Condition=" '$(OS)' == 'Unix' ">
+        $([System.Environment]::GetFolderPath(SpecialFolder.UserProfile))/.microsoft/usersecrets/$(UserSecretsId)/secrets.json
+      </UserSecretsFilePath>
+    </PropertyGroup>
+    <Message Text="$(MSBuildThisFileDirectory)" />
+    <Copy SourceFiles="$(UserSecretsFilePath)" DestinationFolder="$(MSBuildThisFileDirectory)"/>
+    <ItemGroup>
+      <EmbeddedResource Include="secrets.json" />
+    </ItemGroup>
+    <Message Text="UserSecretsFilePath: $(UserSecretsFilePath)" />
+  </Target>
+  <Target Name="DeleteUserSecrets" AfterTargets="Build" Condition=" '$(Configuration)' == 'Debug' And '$(UserSecretsId)' != '' ">
+    <Message Text="TODO: Remove user secrets" />
+    <Delete Files="secrets.json" />
+  </Target>
+</Project>
+```
+
+Then we need to import the `UserSecrets.targets` into the project `.csproj` file, just before the closing `</Project>` tag:
+
+```
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <UserSecretsId>18de31c9-1c19-4155-888e-ee0d3508551f</UserSecretsId>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Forms" Version="4.6.0.800" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Utils\" />
+  </ItemGroup>
+    
+  <Import Project="UserSecrets.targets" />
+</Project>
+```
+
+That way, every time the Xamarin Forms common project is built and the conditions are meet, the `secrets.json` file will be embedded into the compiled project.
 
 ## Read the UserSecrets file from the App
+Now that the `secrets.json` file has been embedded into the compiled Xamarin Forms common project, we can read his content from our app. As an example of reading from the embedded file, I've used the work done by Andrew Hoefling, well described on his post [Xamarin App Configuration: Control Your App Settings](https://www.andrewhoefling.com/Blog/Post/xamarin-app-configuration-control-your-app-settings) from where I've borrowed just a class that I've renamed `UserSecretsManager` that is called from the code behind of the `MainPage` to retrieve the value of `MySecret`.
 
-TODO
+Clearly this just a sample code, on a real app we'll have a mechanism where user secrets will be used to set/ovverride the configuration data on a debug configuration, and a CI/CD pipeline to inject the production configuration data on a release configuration.
 
 ## How to use UserSecrets in your Xamarin Forms app
 
-TODO
+To use User Secrets in your Xamarin Forms app you need to:
+
+1) Init the UserSecrets with Visual Studio (only on your PC) or .NET Core CLI (on your PC or Mac);
+2) Add the `UserSecrets.targets` file at the root of your Xamarin Forms common project;
+3) Modify the `.csproj` file adding `<Import Project="UserSecrets.targets" />` just before the closing `</Project>` tag.
+
+Then you can copy and use the `UserSecretsManager` class to read the secrets.json embedded file content ore create something more suited to your needs.
