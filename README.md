@@ -7,7 +7,7 @@ This project demonstrate the use of UserSecrets to embed configuration data into
 This is obtained adding two MSBuild targets that copy the UserSecrets file to the project as an embeded resource prior to the build process, eventually deleting it at the end of build process.
 
 Because the UserSecrets json data is embedded into the app, we can read it easily.
-Moreover, because the UserSecrets file is outside of the git root folder, is never committed nor pushed to the GitHub repository.
+Moreover, because the UserSecrets file is outside the git root folder, it's never pushed to the GitHub repository.
 
 ## Create a "UserSecrets" file
 Visual Studio has an easy way to create UserSecrets by right clicking on the Xamarin Forms common project and select `Manage User Secrets` :
