@@ -121,4 +121,6 @@ To use User Secrets in your Xamarin Forms app you need to:
 2) Add the `UserSecrets.targets` file at the root of your Xamarin Forms common project;
 3) Modify the `.csproj` file adding `<Import Project="UserSecrets.targets" />` just before the closing `</Project>` tag.
 
-Then you can copy and use the `UserSecretsManager` class to read the secrets.json embedded file content ore create something more suited to your needs.
+Then you can copy and use the `UserSecretsManager` class to read the secrets.json embedded file content or create something more suited to your needs.
+
+In any case, using the UserSecrets you'll be sure that sensible data won't be inadvertently pushed to the GitHub repository anymore.
