@@ -109,7 +109,7 @@ The only thing we need to do is to import the `UserSecrets.targets` into the pro
 That way, every time the Xamarin Forms common project is built and the conditions are meet, the `secrets.json` file will be embedded into the compiled project.
 
 ## Read the "secrets.json" file from the App
-Now that the `secrets.json` file has been embedded into the compiled Xamarin Forms common project, we can read his content from our app. As an example of reading from the embedded file, I've used the work done by Andrew Hoefling, well described on his post [Xamarin App Configuration: Control Your App Settings](https://www.andrewhoefling.com/Blog/Post/xamarin-app-configuration-control-your-app-settings) from where I've borrowed just a class that I've renamed `UserSecretsManager` that is called from the code behind of the `MainPage` to retrieve the value of `MySecret`.
+Now that the `secrets.json` file has been embedded into the compiled Xamarin Forms common project, we can read his content from our app. As an example of reading from the embedded file, I've used the work done by Andrew Hoefling, well described on his post [Xamarin App Configuration: Control Your App Settings](https://www.andrewhoefling.com/Blog/Post/xamarin-app-configuration-control-your-app-settings) from where I've borrowed just a class that I've renamed `UserSecretsManager`, called from the code behind of the `MainPage` to retrieve the value of `MySecret`.
 
 Clearly this just a sample code, on a real app we'll have a mechanism where user secrets will be used to set/ovverride the configuration data on a debug configuration, and a CI/CD pipeline to inject the production configuration data on a release configuration.
 
