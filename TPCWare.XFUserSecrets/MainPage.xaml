@@ -8,11 +8,16 @@
              BackgroundColor="Bisque">
     <StackLayout VerticalOptions="CenterAndExpand" >
         <!-- Place new controls here -->
-        <Label Text="Welcome to User Secrets on Xamarin.Forms!"
+        <Label Text="Welcome to User Secrets"
+               FontSize="Large"
+               HorizontalOptions="Center" />
+        <Label Text="on Xamarin.Forms"
+               FontSize="Large"
                HorizontalOptions="Center" />
         <Label x:Name="UserSecretsLabel"
                Margin="0,50,0,0"
                Text="PlaceHolder"
+               FontSize="Large"
                HorizontalOptions="Center" />
     </StackLayout>
 </ContentPage>
