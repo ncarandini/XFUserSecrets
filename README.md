@@ -54,7 +54,9 @@ Here is the `UserSecrets.targets` file that I've made to implement those steps:
 
 ```
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="EmbedUserSecrets" BeforeTargets="PrepareForBuild" Condition=" '$(Configuration)' == 'Debug' And '$(UserSecretsId)' != '' ">
+  <Target Name="EmbedUserSecrets"
+          BeforeTargets="PrepareForBuild"
+          Condition=" '$(Configuration)' == 'Debug' And '$(UserSecretsId)' != '' ">
     <PropertyGroup>
       <UserSecretsFilePath Condition=" '$(OS)' == 'Windows_NT' ">
         $([System.Environment]::GetFolderPath(SpecialFolder.UserProfile))\AppData\Roaming\Microsoft\UserSecrets\$(UserSecretsId)\secrets.json
@@ -63,15 +65,14 @@ Here is the `UserSecrets.targets` file that I've made to implement those steps:
         $([System.Environment]::GetFolderPath(SpecialFolder.UserProfile))/.microsoft/usersecrets/$(UserSecretsId)/secrets.json
       </UserSecretsFilePath>
     </PropertyGroup>
-    <Message Text="$(MSBuildThisFileDirectory)" />
-    <Copy SourceFiles="$(UserSecretsFilePath)" DestinationFolder="$(MSBuildThisFileDirectory)"/>
+    <Copy SourceFiles="$(UserSecretsFilePath)" DestinationFolder="$(MSBuildThisFileDirectory)" />
     <ItemGroup>
       <EmbeddedResource Include="secrets.json" />
     </ItemGroup>
-    <Message Text="UserSecretsFilePath: $(UserSecretsFilePath)" />
   </Target>
-  <Target Name="DeleteUserSecrets" AfterTargets="Build" Condition=" '$(Configuration)' == 'Debug' And '$(UserSecretsId)' != '' ">
-    <Message Text="TODO: Remove user secrets" />
+  <Target Name="DeleteUserSecrets"
+          AfterTargets="XamlC"
+          Condition=" '$(Configuration)' == 'Debug' And '$(UserSecretsId)' != '' ">
     <Delete Files="secrets.json" />
   </Target>
 </Project>
@@ -87,7 +88,7 @@ The only thing we need to do is to import the `UserSecrets.targets` into the pro
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
-    <UserSecretsId>18de31c9-1c19-4155-888e-ee0d3508551f</UserSecretsId>
+    <UserSecretsId> your_user_secrets_guid </UserSecretsId>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugType>portable</DebugType>
