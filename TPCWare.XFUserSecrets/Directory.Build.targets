@@ -10,14 +10,8 @@
         $([System.Environment]::GetFolderPath(SpecialFolder.UserProfile))/.microsoft/usersecrets/$(UserSecretsId)/secrets.json
       </UserSecretsFilePath>
     </PropertyGroup>
-    <Copy SourceFiles="$(UserSecretsFilePath)" DestinationFolder="$(MSBuildThisFileDirectory)" />
     <ItemGroup>
-      <EmbeddedResource Include="secrets.json"/>
+      <EmbeddedResource Include="$(UserSecretsFilePath)" Condition="Exists($(UserSecretsFilePath))"/>
     </ItemGroup>
-  </Target>
-  <Target Name="DeleteUserSecrets"
-          AfterTargets="CoreCompile"
-          Condition=" '$(Configuration)' == 'Debug' And '$(UserSecretsId)' != '' ">
-    <Delete Files="secrets.json" />
   </Target>
 </Project>
