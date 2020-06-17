@@ -53,7 +53,7 @@ The last one is preferable because we only needs to add a file that we can just 
 
 When MSBuild runs, *Microsoft.Common.targets* searches the directory structure for the `Directory.Build.targets` file. If it finds one, it imports the targets without the need to explicitly import them on the `.csproj` file. More info about the `Directory.Build.props`and `Directory.Build.targets` files can be found on [Microsoft Docs](https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build).
 
-Here is the `Directory.Build.targets` file that I've made to implement those steps (thanks to [Jonathan Dick](https://twitter.com/redth) help):
+Here is the `Directory.Build.targets` file that I've composed to implement those steps (also thanks to [Jonathan Dick](https://twitter.com/redth) help):
 
 ```
 <Project>
