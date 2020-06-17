@@ -37,9 +37,8 @@ The `UserSecretsId` is a Guid (Globally Unique Identifier) assigned during the u
 
 ## MSBuild customization
 
-To add the `secret.json` file as an `EmbeddedResource` to the Xamarin Forms common project we need to do some steps before the build process.
+To add the `secret.json` file as an `EmbeddedResource` to the Xamarin Forms common project we need to execute some steps before the build process:
 
-Before the Build process:
 1) Check that we are building a `debug` version;
 2) Verify that the project is using UserSecrets;
 3) Add the file to the `EmbeddedResource` file list.
@@ -48,11 +47,13 @@ In order to do that, we have multiple choices:
 
 - Modify the `.csproj` file
 - Create a `.targets` file and add an `import` command at the end of the `.csproj` file
-- Create a `Directory.Build.props` file on the same folder of the `.csproj` file
+- Create a `Directory.Build.targets` file on the same folder of the `.csproj` file 
 
-The last one is preferable because we can just copy and paste the `Directory.Build.props` file on every project where we want to use UserSecrets, without touching the `.csproj` file. More info about the `Directory.Build.props` file can be found on [Microsoft Docs](https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build).
+The last one is preferable because we only needs to add a file that we can just copy and paste on every project where we want to use UserSecrets, without touching the `.csproj` file.
 
-Here is the `Directory.Build.props` file that I've made to implement those steps (also thanks to Jonathan Dick help):
+When MSBuild runs, *Microsoft.Common.targets* searches the directory structure for the `Directory.Build.targets` file. If it finds one, it imports the targets without the need to explicitely import them on the `.csproj` file. More info about the `Directory.Build.props`and `Directory.Build.targets` files can be found on [Microsoft Docs](https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build).
+
+Here is the `Directory.Build.targets` file that I've made to implement those steps (thanks to [Jonathan Dick](https://twitter.com/redth) help):
 
 ```
 <Project>
@@ -74,7 +75,7 @@ Here is the `Directory.Build.props` file that I've made to implement those steps
 </Project>
 ```
 
-It's worth noting that this works on both Windows and Unix/OSX platforms and that it use the `UserSecretsId` property set on the .csproj file, so it can be copied and used in any solution without any need to change it.
+It's worth noting that this works on both Windows and Unix/OSX platforms and that it refers the `UserSecretsId` property set on the .csproj file, so it can be copied and used in any solution as his. without any need to change it.
 
 That way, every time the Xamarin Forms common project is built and the conditions are meet, the `secrets.json` file will be embedded into the compiled project.
 
@@ -88,7 +89,7 @@ Clearly this just a sample code, on a real app we'll have a mechanism where user
 To use User Secrets in your Xamarin Forms app you need to:
 
 1) Init the UserSecrets with Visual Studio (only on your PC) or .NET Core CLI (on your PC or Mac);
-2) Add the `Directory.Build.props` file at the root of your Xamarin Forms common project;
+2) Add the `Directory.Build.targets` file at the root of your Xamarin Forms common project;
 
 Then you can copy and use the `UserSecretsManager` class to read the secrets.json embedded file content or create something more suited to your needs.
 
