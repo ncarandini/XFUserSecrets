@@ -44,7 +44,7 @@ Before the Build process:
 2) Verify that the project is using UserSecrets;
 3) Add the file to the `EmbeddedResource` file list.
 
-In order to do that, we can:
+In order to do that, we have multiple choices:
 
 - Modify the `.csproj` file
 - Create a `.targets` file and add an `import` command at the end of the `.csproj` file
