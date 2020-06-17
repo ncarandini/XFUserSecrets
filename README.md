@@ -4,8 +4,6 @@ Demo project that use UserSecrets in a Xamarin Forms App
 ## Description
 This project demonstrate the use of UserSecrets to embed configuration data into a Xamarin Forms App without exposing them to the GitHub project.
 
-This is obtained adding two MSBuild targets that copy the UserSecrets file to the project as an embeded resource prior to the build process, eventually deleting it at the end of build process.
-
 Because the UserSecrets json data is embedded into the app, we can read it easily.
 Moreover, because the UserSecrets file is outside the git root folder, it's never pushed to the GitHub repository.
 
@@ -37,24 +35,28 @@ The `UserSecretsId` is a Guid (Globally Unique Identifier) assigned during the u
 
 ![image](https://user-images.githubusercontent.com/139274/83566339-236b6a00-a520-11ea-855a-d0648e953b80.png)
 
-## MSBuild "EmbedUserSecrets" target
+## MSBuild customization
 
-To add the `secret.json` file as an `EmbeddedResource` to the Xamarin Forms common project we need to do some steps before and after the build process.
+To add the `secret.json` file as an `EmbeddedResource` to the Xamarin Forms common project we need to do some steps before the build process.
 
 Before the Build process:
 1) Check that we are building a `debug` version;
 2) Verify that the project is using UserSecrets;
-3) Copy the `secret.json` file to the project folder;
-4) Add the file to the `EmbeddedResource` file list.
+3) Add the file to the `EmbeddedResource` file list.
 
-After the Build process:
-1) Delete the `secret.json` file.
+In order to do that, we can:
 
-Here is the `UserSecrets.targets` file that I've made to implement those steps:
+- Modify the `.csproj` file
+- Create a `.targets` file and add an `import` command at the end of the `.csproj` file
+- Create a `Directory.Build.props` file on the same folder of the `.csproj` file
+
+The last one is preferable because we can just copy and paste the `Directory.Build.props` file on every project where we want to use UserSecrets, without touching the `.csproj` file. More info about the `Directory.Build.props` file can be found on [Microsoft Docs](https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build).
+
+Here is the `Directory.Build.props` file that I've made to implement those steps:
 
 ```
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="EmbedUserSecrets"
+<Project>
+  <Target Name="AddUserSecrets"
           BeforeTargets="PrepareForBuild"
           Condition=" '$(Configuration)' == 'Debug' And '$(UserSecretsId)' != '' ">
     <PropertyGroup>
@@ -65,47 +67,14 @@ Here is the `UserSecrets.targets` file that I've made to implement those steps:
         $([System.Environment]::GetFolderPath(SpecialFolder.UserProfile))/.microsoft/usersecrets/$(UserSecretsId)/secrets.json
       </UserSecretsFilePath>
     </PropertyGroup>
-    <Copy SourceFiles="$(UserSecretsFilePath)" DestinationFolder="$(MSBuildThisFileDirectory)" />
     <ItemGroup>
-      <EmbeddedResource Include="secrets.json" />
+      <EmbeddedResource Include="$(UserSecretsFilePath)" Condition="Exists($(UserSecretsFilePath))"/>
     </ItemGroup>
   </Target>
-  <Target Name="DeleteUserSecrets"
-          AfterTargets="XamlC"
-          Condition=" '$(Configuration)' == 'Debug' And '$(UserSecretsId)' != '' ">
-    <Delete Files="secrets.json" />
-  </Target>
 </Project>
 ```
 
-It's worth noting that this should work on both Windows and Unix/Mac OSX platforms and that it use the `UserSecretsId` property set on the .csproj file, so it can be copied and used in any solution without any need to change it.
-
-The only thing we need to do is to import the `UserSecrets.targets` into the project `.csproj` file, adding `<Import Project="UserSecrets.targets" />` just before the closing `</Project>` tag:
-
-```
-<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
-    <UserSecretsId> your_user_secrets_guid </UserSecretsId>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DebugType>portable</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="4.6.0.800" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utils\" />
-  </ItemGroup>
-    
-  <Import Project="UserSecrets.targets" />
-</Project>
-```
+It's worth noting that this works on both Windows and Unix/OSX platforms and that it use the `UserSecretsId` property set on the .csproj file, so it can be copied and used in any solution without any need to change it.
 
 That way, every time the Xamarin Forms common project is built and the conditions are meet, the `secrets.json` file will be embedded into the compiled project.
 
