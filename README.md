@@ -52,7 +52,7 @@ In order to do that, we have multiple choices:
 
 The last one is preferable because we can just copy and paste the `Directory.Build.props` file on every project where we want to use UserSecrets, without touching the `.csproj` file. More info about the `Directory.Build.props` file can be found on [Microsoft Docs](https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build).
 
-Here is the `Directory.Build.props` file that I've made to implement those steps:
+Here is the `Directory.Build.props` file that I've made to implement those steps (also thanks to Jonathan Dick help):
 
 ```
 <Project>
@@ -88,8 +88,7 @@ Clearly this just a sample code, on a real app we'll have a mechanism where user
 To use User Secrets in your Xamarin Forms app you need to:
 
 1) Init the UserSecrets with Visual Studio (only on your PC) or .NET Core CLI (on your PC or Mac);
-2) Add the `UserSecrets.targets` file at the root of your Xamarin Forms common project;
-3) Modify the `.csproj` file adding `<Import Project="UserSecrets.targets" />` just before the closing `</Project>` tag.
+2) Add the `Directory.Build.props` file at the root of your Xamarin Forms common project;
 
 Then you can copy and use the `UserSecretsManager` class to read the secrets.json embedded file content or create something more suited to your needs.
 
