@@ -75,7 +75,7 @@ Here is the `Directory.Build.targets` file that I've composed to implement those
 </Project>
 ```
 
-It's worth noting that this works on both Windows and Unix/OSX platforms and that it refers the `UserSecretsId` property set on the .csproj file, so it can be copied and used "as is" in any solution, without having to change it.
+It's worth noting that it works on both Windows and Unix/OSX platforms and that because it uses the `UserSecretsId` property set on the .csproj file, so it can be copied and used "as is" in any project, without any change.
 
 Having this done, every time the Xamarin Forms common project is built and the conditions are meet, the `secrets.json` file will be embedded into the compiled project.
 
